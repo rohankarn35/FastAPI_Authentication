@@ -1,4 +1,4 @@
-from main import *
+from fastapi import *
 from passlib.context import CryptContext
 from UserModel.users import *
 from config.db import client
@@ -9,6 +9,11 @@ from fastapi.security import *
 
 db = client["addfs"]
 collection = db['Users']
+ALGORITHM = "HS256"
+SECRET_KEY="02bf4db4ee6178cc094e3a41fb5d07316127543db677a116d11ecdf27801d752"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 def verify_password(plain_password,hased_password):
     return pwd_context.verify(plain_password,hased_password)

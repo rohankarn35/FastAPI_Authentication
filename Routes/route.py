@@ -26,4 +26,16 @@ async def read_users_me(current_user:User = Depends(get_active_user)):
 
 @authen_route.get("/user/me/item")
 async def read_own_items(current_user:User = Depends(get_active_user)):
-    return {"item":1,"owner":current_user}       
+    return {"item":1,"owner":current_user}
+
+@authen_route.post("/register",response_model=User)
+async def create_user(user:UserCreate):
+    # check username already exists or not
+    existing_user = get_UserInDB(user.username)
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Username already exist")
+    existing_email = get_UserInDB(user.email)
+    if existing_email:
+        raise HTTPException(status_code=409,detail="Email is already in use")
+    
+
