@@ -21,11 +21,11 @@ async def login_for_access_token(form_data:OAuth2PasswordRequestForm = Depends()
     return {"access_token": access_token,"token_type":"Bearer"}
 
 @authen_route.get("/users/me",response_model=User)
-async def read_users_me(current_user:User = Depends(get_active_user)):
+async def read_users_me(current_user:User = Depends(get_current_user)):
     return current_user
 
 @authen_route.get("/user/me/item")
-async def read_own_items(current_user:User = Depends(get_active_user)):
+async def read_own_items(current_user:User = Depends(get_current_user)):
     return {"item":1,"owner":current_user}
 
 @authen_route.post("/register",response_model=User)
@@ -37,5 +37,10 @@ async def create_user(user:UserCreate):
     existing_email = get_UserInDB(user.email)
     if existing_email:
         raise HTTPException(status_code=409,detail="Email is already in use")
-    
+    hashed_password = get_password_hased(user.password)
+    user_data = user.dict()
+    user_data["hashed_password"] = hashed_password  
+    del user_data["password"]
+    collection.insert_one(user_data)
+    return user_data
 
