@@ -30,7 +30,7 @@ A simple authentication system built using FastAPI and MongoDB.
    ```
 2. Navigate to the project directory:
     ```
-    cd fastapi-mongodb-auth
+    cd FastAPI_Authentication
     ```
 3. Install the dependencies:
    ```
